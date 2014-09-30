@@ -2,6 +2,7 @@
 #include <queue> 
 #include <set> 
 #include <iostream> 
+#include <vector> 
 
 using namespace std;
 
@@ -9,6 +10,7 @@ struct state {
 	int m; //num of missionaries on left side
 	int c; //num of cannibals on left side
 	int b; //0 on left side; 1 on right side
+	vector<state> path; 
 	bool operator==(const state &other) const {
 		return (m == other.m && c == other.c && b == other.b); 
 	}
@@ -40,6 +42,9 @@ void genChildren(state &curr_state, bool on_initial_side) {
 				next_state.b = on_initial_side? 1 : 0; 
 				if(valid_state(next_state) && visited.find(next_state)==visited.end()) {
     				printf("NEXT: m-%d c-%d %d\n", next_state.m, next_state.c, next_state.b);
+					for(int p = 0; p < curr_state.path.size(); p++)
+						next_state.path.push_back(curr_state.path[p]);
+					next_state.path.push_back(curr_state);  
 					q.push(next_state); 
 				}
 			}	

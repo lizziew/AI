@@ -6,6 +6,9 @@
 
 using namespace std;
 
+//bfs solution to the missionaries and cannibals problem 
+//(with 3 missionaries and 3 cannibals) 
+
 struct state {
 	int m; //num of missionaries on initial side
 	int c; //num of cannibals on initial side
@@ -29,7 +32,9 @@ bool valid_state(state s) {
 	return (s.m == 0 || s.m >= s.c)  &&  ((3-s.m)==0 || (3-s.m) >= (3-s.c));
 }
 
-void genChildren(state &curr_state, bool on_initial_side) {
+void genChildren(state &curr_state) {
+	bool on_initial_side = (curr_state.b+1)%2; 
+
 	int m = on_initial_side? curr_state.m : 3-curr_state.m; 
 	int c = on_initial_side? curr_state.c : 3-curr_state.c; 
 
@@ -62,15 +67,15 @@ int main() {
 			//printf("STATE: m-%d c-%d %d\n", curr_state.m, curr_state.c, curr_state.b);	
 			
 			if(curr_state.m == 0 && curr_state.b == 0 && curr_state.c == 1) {
-				printf("FOUND SOLUTION\n");
+				printf("SOLUTION PATH:\n");
 				for(int i = 0; i < curr_state.path.size(); i++)
-					printf("do move: %d %d %d\n", curr_state.path[i].m, curr_state.path[i].c, curr_state.path[i].b);
+					printf("%d %d %d\n", curr_state.path[i].m, curr_state.path[i].c, curr_state.path[i].b);
+				break; 
 			} 
 
 			visited.insert(curr_state); 
 
-			if(curr_state.b == 0) genChildren(curr_state, 1); //boat on initial side
-			else genChildren(curr_state, 0); //boat on other side
+			genChildren(curr_state); 
 		}
 	} 
 

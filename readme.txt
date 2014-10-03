@@ -5,7 +5,7 @@ Missionaries and Cannibals (with 3 missionaries, 3 cannibals)
 mc.cpp is the bfs solution. in terminal, run the commands
 
 g++ mc.cpp -O2 -o mc 
-./a.out
+./mc
 
 to print out the solution path.
 
@@ -14,7 +14,7 @@ to print out the solution path.
 mc_bi.cpp uses bidirectional search. in terminal, run the commands
 
 g++ mc_bi.cpp -O2 -o mc_bi 
-./a.out
+./mc_bi
 
 to print out the solution path.
 

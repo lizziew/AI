@@ -10,7 +10,7 @@ struct state {
 	int m; //num of missionaries on left side
 	int c; //num of cannibals on left side
 	int b; //0 on left side; 1 on right side
-	vector<state> path; 
+	vector<state> path; //the state path
 
 	bool operator==(const state &other) const {
 		return (m == other.m && c == other.c && b == other.b); 
@@ -55,10 +55,10 @@ void genChildren(state &curr_state, set<state> &visited, queue<state> &q) {
 int main() {
 	int checks = 0; 
 
-	state s; 
+	state s; //initial state
 	s.m = 3, s.c = 3, s.b = 0; 
 
-	state g; 
+	state g; //goal state
 	g.m = 0, g.c = 0, g.b = 1; 
 
 	q1.push(s); 
@@ -69,18 +69,17 @@ int main() {
 		if(!q1.empty()) {
 			curr_state1 = q1.front(); 			
 			q1.pop(); 
+			if(visited1.find(curr_state1)==visited1.end()) 
+				genChildren(curr_state1, visited1, q1);
+				visited1.insert(curr_state1); 
 		}	
 		if(!q2.empty()) {
 			curr_state2 = q2.front();
 			q2.pop(); 
-		}
-
-		if(visited1.find(curr_state1)==visited1.end()) genChildren(curr_state1, visited1, q1);
-		
-		if(visited2.find(curr_state2)==visited2.end()) genChildren(curr_state2, visited2, q2); 
-
-		visited1.insert(curr_state1);  
-		visited2.insert(curr_state2);  
+			if(visited2.find(curr_state2)==visited2.end()) 
+				genChildren(curr_state2, visited2, q2); 
+			visited2.insert(curr_state2); 
+		} 
 
 		if(visited1.find(curr_state2)!=visited1.end() || visited2.find(curr_state1)!=visited2.end()) {
 			printf("SOLUTION PATH: \n");	

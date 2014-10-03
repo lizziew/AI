@@ -13,7 +13,7 @@ struct state {
 	int m; //num of missionaries on initial side
 	int c; //num of cannibals on initial side
 	bool b; //0 on initial side; 1 on other side
-	vector<state> path; 
+	vector<state> path; //the state path
 	bool operator==(const state &other) const {
 		return (m == other.m && c == other.c && b == other.b); 
 	}

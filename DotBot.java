@@ -12,7 +12,7 @@ import java.lang.Math;
 public class DotBot {
 
   static char numToDir[] = new char[]{'n', 'e', 's', 'w'}; //map int to direction
-  static int w=11, h=11; //size of board
+  static int w=11, h=11; //max size of board
   static PrintStream fout; //file for debugging
   static Random rand = new Random(); 
 
@@ -61,7 +61,7 @@ public class DotBot {
     int x, y;
     char d; 
 
-    public Move(int x, int y, char d) {
+    public Move(int x, int y, char d) { //pos of box and dir of line drawn
       this.x=x;
       this.y=y;
       this.d=d;
@@ -111,16 +111,6 @@ public class DotBot {
           board[i][j].lines[k] = 0; 
       }
     return board;
-  }
-
-  static void logBoard(Box[][] board) {
-    for(int i =0; i < w; i++) {//todo to check if i < w and j < h in every for loop
-      for(int j = 0; j < h; j++) {
-        fout.print(board[i][j].winner);
-        fout.print(" "); 
-      }
-      fout.println(); 
-    }
   }
 
   static Move[] parseMoves(String line) {
@@ -248,8 +238,7 @@ public class DotBot {
   static void randomEndMove(Box[][] board) {
     int x = 0, y = 0; 
 
-    //will only make random move if: 
-    //--line hasn't been drawn yet
+    //will only make random move if line hasn't been drawn yet
 
     while(true) {
       x = rand(w);
@@ -304,24 +293,22 @@ public class DotBot {
     return true;  
   }
 
-  static int counter = 0; 
+  static int counter = 0; //if minimax is taking too long, stop and make a random move
 
+  //minimax with alpha beta pruning
   static int minimax(Box[][] board, int depth, int player, int alpha, int beta) { 
     logData("counter " + counter); 
 
     if(counter++ >= 1e5) { 
       logData("abandon ship!");
-      return -5000; 
+      return -5000; //random value that heuristic will never reach
     }
 
-    logData("minimax..." + depth + " " + player); 
-    if(depth == 0 || isLeaf(board)) { //or node is leaf node!? 
+    if(depth == 0 || isLeaf(board)) { 
       int numBoxes = 0; 
       for(int i = 0; i < w; i++)
         for(int j = 0; j < h; j++) 
           numBoxes += board[i][j].winner; //rough heuristic value
-
-      //logData("heuristic: " + numBoxes);
       return numBoxes; 
     }
 
@@ -334,20 +321,10 @@ public class DotBot {
               Box[][] clone=cloneBoard(board);
               drawLine(clone, i, j, k, player); 
 
-              /*String indent = ""; 
-              for(int t = depth; t < 2; t++)
-                indent += "___________";
-              logData(indent + "try our move " + i + " " + j + " " + k); 
-              logBoard(clone); 
-              logData(""); */ 
-
               currVal = minimax(clone, depth-1, -1, alpha, beta);
-              if(currVal == -5000) {
-                logData("Got here...");
-                return -5000; 
-              }
+              if(currVal == -5000) return -5000; 
               alpha = Math.max(alpha, currVal); 
-              if(alpha > beta) { //find max score if our agent's turn
+              if(alpha > beta) { 
                 return beta; 
               }
             eraseLine(clone, i, j, k); 
@@ -362,20 +339,10 @@ public class DotBot {
               Box[][] clone=cloneBoard(board);
               drawLine(clone, i, j, k, player); 
 
-              /*String indent = ""; 
-              for(int t = depth; t < 2; t++)
-                indent += "___________";
-              logData(indent + "try their move " + i + " " + j + " " + k);
-              logBoard(clone); 
-              logData(""); */ 
-
               currVal = minimax(clone, depth-1, 1, alpha, beta); 
-              if(currVal == -5000) {
-                logData("got here...");
-                return -5000; 
-              }
+              if(currVal == -5000) return -5000; 
               beta = Math.min(currVal, beta); 
-              if(beta < alpha) { //find min score if other agent's turn
+              if(beta < alpha) { 
                 return alpha; 
               }
               eraseLine(clone, i, j, k); 
@@ -384,11 +351,11 @@ public class DotBot {
     }
 
     logData("ERROR IN MINIMAX.");
-    return -1; //error in minimax
+    return -1; //error in minimax. hopefully, method will never arrive here
   }
 
   public static void main(String[] args) throws Exception {
-    fout=new PrintStream("moves.txt");
+    fout=new PrintStream("moves.txt"); //file for debugging
     Scanner sc = new Scanner(System.in);
     w = sc.nextInt();
     h = sc.nextInt();
@@ -402,12 +369,10 @@ public class DotBot {
 
       for (Move move: moves) {
         drawLine(board, move, -1);  
-        logMove("their move: ", move.x, move.y, numToDir[mapdir(move.d)]); 
-        //logBoard(board);       
+        logMove("their move: ", move.x, move.y, numToDir[mapdir(move.d)]);      
       }
      
       if(smartPlay == 0) { //make a random move in beginning of game
-        //logData("MAKE RANDOM MOVES..."); 
         boolean madeMove = false; 
         for(int i = 0; i < w && !madeMove; i++)
           for(int j = 0; j < h && !madeMove; j++)
@@ -415,24 +380,16 @@ public class DotBot {
               for(int k = 0; k < 4; k++) 
                 if(board[i][j].lines[k] == 0) {
                   outputMove(i,j,numToDir[k]); 
-                  drawLine(board, i, j, k, 1); 
-                  //logBoard(board);    
-                  //logMove("complete 4...our move: ",i,j,numToDir[k]);
+                  drawLine(board, i, j, k, 1);   
                   madeMove = true; 
                   break;  
                 }
-        if(!madeMove) {
-          long sTime = System.nanoTime(); 
-          randomMove(board); //else if no box with 3 lines, make a random move 
-          long eTime = System.nanoTime(); 
-          if((eTime-sTime)/1e9 > 2.0) logData("OVERTIME");
-        }
+        if(!madeMove) randomMove(board); //else if no box with 3 lines, make a random move 
 
         if(startSmartPlay(board)) 
           smartPlay = 1; 
-      } else if(smartPlay == 1) { //make a smarter move using minimax
-        long startTime = System.nanoTime(); 
-        logData("MINIMAX");
+      } 
+      else if(smartPlay == 1) { //make a smarter move using minimax
         int mx=-1, my=-1, md=-1;
         int maxScore = -1000; 
         int currScore = 0;
@@ -442,13 +399,12 @@ public class DotBot {
           for(int j = 0; j < h && currScore != -5000; j++)
             for(int k = 0; k < 4 && currScore != -5000; k++) 
               if(board[i][j].lines[k] == 0) {//try this move
-                //logData("first try our move " + i + " " + j + " " + k);
                 Box[][] clone=cloneBoard(board);
                 drawLine(clone, i, j, k, 1); //try line
                 currScore = minimax(clone, 2, -1, -1000, 1000); //look 2 levels deep
-                if(currScore == -5000) {
+                if(currScore == -5000) { //if minimax is taking too long, make random move 
                   logData("switch to random moves"); 
-                  randomEndMove(board);
+                  randomEndMove(board); //in future, maybe replace this with smarter move based on endgame theory
                   break;  
                 } 
                 if(currScore > maxScore) {
@@ -457,18 +413,13 @@ public class DotBot {
                 }
               }
 
-        if(currScore != -5000) {
+        if(currScore != -5000) { //if minimax found an optimal move, make that move
           drawLine(board, mx, my, md, 1); //draw final line on board
-          long endTime = System.nanoTime(); 
-          outputMove(mx,my,numToDir[md]);
-          //logBoard(board);    
+          outputMove(mx,my,numToDir[md]);  
           logMove("our move: ",mx,my,numToDir[md]);
-          if((endTime-startTime)/1e9 > 2.0) logData("OVERTIME"); 
         }
       }
-      
     }
     fout.close();
   }
-
 }

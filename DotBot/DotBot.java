@@ -4,16 +4,17 @@ import java.io.PrintStream;
 import java.util.Random;
 import java.lang.Math; 
 
-//AI agent for 2 player dot and boxes game 
+//AI agent for 2 player dot and boxes game
+//under 2 second time limit for board 5*7
 
 //RUN CMD 
-//coffee environ.coffee 'coffee naive.coffee' 'java DotBot' -r 5
+//coffee environ.coffee 'coffee naive.coffee' 'java DotBot' -r 5 -h 5 -w 7
 
 public class DotBot {
 
   static char numToDir[] = new char[]{'n', 'e', 's', 'w'}; //map int to direction
   static int w=11, h=11; //max size of board
-  static PrintStream fout; //file for debugging
+  //static PrintStream fout; //file for debugging
   static Random rand = new Random(); 
 
   static int mapdir(char d) { //map direction to int
@@ -30,18 +31,18 @@ public class DotBot {
     System.out.printf("%d %d %c\n",x,y,d);
   }
 
-  static void logData(String msg) { //to a file for debugging
+  /*static void logData(String msg) { 
     fout.println(msg);
   }
 
-  static void logMove(String header, int x, int y, char d) { //to a file for debugging
+  static void logMove(String header, int x, int y, char d) { 
     fout.print(header);
     fout.print(x);
     fout.print(" ");
     fout.print(y);
     fout.print(" ");
     fout.println(d);
-  }
+  }*/ 
   
   static int rand(int n) {
     return rand.nextInt(n);
@@ -202,33 +203,33 @@ public class DotBot {
       y = rand(h); 
       if(board[x][y].numLines >= 2) 
         continue;
-		
+    
       //try 0 (north)
       if(board[x][y].lines[0] == 0 && !(y-1 >= 0 && board[x][y-1].numLines >= 2)) {
         outputMove(x,y,numToDir[0]);
         drawLine(board, x, y, 0, 1); 
-        logMove("random...our move: ",x,y,numToDir[0]);
+        //logMove("random...our move: ",x,y,numToDir[0]);
         return; 
       }
       //try 1 (east)
       else if(board[x][y].lines[1] == 0 && !(x+1 < w && board[x+1][y].numLines >= 2)) {
         outputMove(x,y,numToDir[1]);
         drawLine(board, x, y, 1, 1); 
-        logMove("random...our move: ",x,y,numToDir[1]);
+        //logMove("random...our move: ",x,y,numToDir[1]);
         return; 
       }
       //try 2 (south)
       else if(board[x][y].lines[2] == 0 && !(y+1 < h && board[x][y+1].numLines >= 2)) {
         outputMove(x,y,numToDir[2]);
         drawLine(board, x, y, 2, 1); 
-        logMove("random...our move: ",x,y,numToDir[2]);
+        //logMove("random...our move: ",x,y,numToDir[2]);
         return; 
       }
       //try 3 (west)
       else if(board[x][y].lines[3] == 0 && !(x-1 >=0 && board[x-1][y].numLines >= 2)) {
         outputMove(x,y,numToDir[3]);
         drawLine(board, x, y, 3, 1); 
-        logMove("random...our move: ",x,y,numToDir[3]); 
+        //logMove("random...our move: ",x,y,numToDir[3]); 
         return; 
       }
     }
@@ -248,28 +249,28 @@ public class DotBot {
       if(board[x][y].lines[0] == 0) {
         outputMove(x,y,numToDir[0]);
         drawLine(board, x, y, 0, 1); 
-        logMove("random...our move: ",x,y,numToDir[0]);
+        //logMove("random...our move: ",x,y,numToDir[0]);
         return; 
       }
       //try 1 (east)
       else if(board[x][y].lines[1] == 0) {
         outputMove(x,y,numToDir[1]);
         drawLine(board, x, y, 1, 1); 
-        logMove("random...our move: ",x,y,numToDir[1]);
+        //logMove("random...our move: ",x,y,numToDir[1]);
         return; 
       }
       //try 2 (south)
       else if(board[x][y].lines[2] == 0) {
         outputMove(x,y,numToDir[2]);
         drawLine(board, x, y, 2, 1); 
-        logMove("random...our move: ",x,y,numToDir[2]);
+        //logMove("random...our move: ",x,y,numToDir[2]);
         return; 
       }
       //try 3 (west)
       else if(board[x][y].lines[3] == 0) {
         outputMove(x,y,numToDir[3]);
         drawLine(board, x, y, 3, 1); 
-        logMove("random...our move: ",x,y,numToDir[3]); 
+        //logMove("random...our move: ",x,y,numToDir[3]); 
         return; 
       }
     }
@@ -297,10 +298,10 @@ public class DotBot {
 
   //minimax with alpha beta pruning
   static int minimax(Box[][] board, int depth, int player, int alpha, int beta) { 
-    logData("counter " + counter); 
+    //logData("counter " + counter); 
 
     if(counter++ >= 1e5) { 
-      logData("abandon ship!");
+      //logData("abandon ship!");
       return -5000; //random value that heuristic will never reach
     }
 
@@ -350,12 +351,12 @@ public class DotBot {
       return beta; 
     }
 
-    logData("ERROR IN MINIMAX.");
+    //logData("ERROR IN MINIMAX.");
     return -1; //error in minimax. hopefully, method will never arrive here
   }
 
   public static void main(String[] args) throws Exception {
-    fout=new PrintStream("moves.txt"); //file for debugging
+    //fout=new PrintStream("moves.txt"); //file for debugging
     Scanner sc = new Scanner(System.in);
     w = sc.nextInt();
     h = sc.nextInt();
@@ -369,7 +370,7 @@ public class DotBot {
 
       for (Move move: moves) {
         drawLine(board, move, -1);  
-        logMove("their move: ", move.x, move.y, numToDir[mapdir(move.d)]);      
+        //logMove("their move: ", move.x, move.y, numToDir[mapdir(move.d)]);      
       }
      
       if(smartPlay == 0) { //make a random move in beginning of game
@@ -401,9 +402,9 @@ public class DotBot {
               if(board[i][j].lines[k] == 0) {//try this move
                 Box[][] clone=cloneBoard(board);
                 drawLine(clone, i, j, k, 1); //try line
-                currScore = minimax(clone, 2, -1, -1000, 1000); //look 2 levels deep
+                currScore = minimax(clone, 3, -1, -1000, 1000); //look 3 levels deep
                 if(currScore == -5000) { //if minimax is taking too long, make random move 
-                  logData("switch to random moves"); 
+                  //logData("switch to random moves"); 
                   randomEndMove(board); //in future, maybe replace this with smarter move based on endgame theory
                   break;  
                 } 
@@ -416,10 +417,10 @@ public class DotBot {
         if(currScore != -5000) { //if minimax found an optimal move, make that move
           drawLine(board, mx, my, md, 1); //draw final line on board
           outputMove(mx,my,numToDir[md]);  
-          logMove("our move: ",mx,my,numToDir[md]);
+          //logMove("our move: ",mx,my,numToDir[md]);
         }
       }
     }
-    fout.close();
+    //fout.close();
   }
 }

@@ -1,0 +1,25 @@
+Answer the following questions about the Dots and Lines project and your work.
+
+1) Describe how your agent makes its choices in the game.  I do not want you to discuss code, but feel free to describe the structures and algorithms that you chose (minmax tree, depth-first search, etc.).
+
+The main structure used in the program is the "Box." The box records which of its lines have been drawn in an array, which agent has won it (if any), and how many of its lines have been drawn. In the beginning of the game, the agent acts greedily. If there's a box with 3 sides, the agent draws the 4th line to take over that box. If there are no boxes with 3 sides, then the agent picks a random move by drawing a line in a box that only has 0 or 1 lines. Once there are 10 "freeBoxes" left (boxes with less than 2 lines drawn), the agent begins choosing its moves based on a depth-first search of a minimax tree with alpha beta pruning. It looks a total of 3 levels deep. If the agent has traversed more than 100,000 states, then the agent stops looking and instead does a random move (so to not pass the time limit of 2 seconds.)  
+
+2) Given another week to work on this assignment, what would you have changed?  Nothing?  Everything?  Explain why.
+
+I would keep on testing different strategies, such as when are the optimal times to start and stop moving greedily (or if the agent should be greedy at any point in time at all.) Also, the heuristic function right now is very rough: it’s the number of boxes the agent has won minus the number of boxes the opponent has won. I don’t know enough theory to make a better heuristic function as of now - it would be nice to take advantage of chains, etc. With a better heuristic function, the moves based on the minimax function would improve.   
+
+3) Name what was, for you, the most challenging aspect of this project.
+
+The most challenging aspect of this project was figuring out how to make a move under the time limit.   //debugging? 
+
+4) The class chose the game of Dots and Lines for this assignment, but any number of different games could have been used.  Now that you are finished, do you feel that it was an appropriate choice?
+
+I think making a Dots and Lines agent is an appropriate project. I don’t know much about more complex strategies for this game, so I was unsure of how to write a good heuristic function. However, it’s more complex and interesting than Tic Tac Toe and overall a good choice for figuring out how to implement the various algorithms we learned about in class.
+
+5) What amount of time did you feel that you devoted to building your agent as compared to game mechanics or "just getting things to work"?
+
+I spent about 25% of the time getting things to work and 75% of the time building my agent. 
+
+6) How could the assignment have been improved?
+
+7) Add any additional comments.

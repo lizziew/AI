@@ -10,5 +10,3 @@ $ 2 2
 $ 0 0 n
 $ ... //etc
 
-Instructions to run against another agent in environ.coffee on a 10 by 10 board:
-$ coffee environ.coffee 'coffee naive.coffee' 'java DotBot' -r 5 

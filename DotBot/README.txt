@@ -1,7 +1,6 @@
 DotBot
 
 An agent for 2 player dot and boxes game. Minimax with alpha beta pruning.
-Maximum board size 10*10.
 
 Instructions to play against DotBot on a 2 by 2 board:
 $ javac DotBot.java

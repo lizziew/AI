@@ -4,7 +4,7 @@ import java.io.PrintStream;
 import java.util.Random;
 import java.lang.Math; 
 
-//AI agent for 2 player dot and boxes game with maximum board size 10*10
+//AI agent for 2 player dot and boxes game 
 
 //RUN CMD 
 //coffee environ.coffee 'coffee naive.coffee' 'java DotBot' -r 5

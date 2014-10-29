@@ -10,16 +10,21 @@ I would keep on testing different strategies, such as when are the optimal times
 
 3) Name what was, for you, the most challenging aspect of this project.
 
-The most challenging aspect of this project was figuring out how to make a move under the time limit. I now have a counter (explained in question 1) that stops the minimax after 100,000 states have been traversed.   //debugging? 
+There were two challenging aspects of this project. First was figuring out the best way to limit the time to make a move to under 2 seconds for a 5 by 7 board. After trying out various options, I now have a counter (explained in question 1) that stops the minimax after 100,000 states have been traversed. Another challenging aspect was debugging. I logged messages in an output file, but the text was easily in 10s of MBs. I had to figure out how to analyze the information, using tools like the “tail” cmd to debug the last few rounds of the minimax search.  
 
 4) The class chose the game of Dots and Lines for this assignment, but any number of different games could have been used.  Now that you are finished, do you feel that it was an appropriate choice?
 
-I think making a Dots and Lines agent is an appropriate project. I don’t know much about more complex strategies for this game, so I was unsure of how to write a good heuristic function. However, it’s more complex and interesting than Tic Tac Toe and overall a good game for figuring out and getting familiar with implementations of the various algorithms we learned about in class.
+I think making a Dots and Lines agent is an appropriate project. I don’t know much about more complex strategies for this game, so I was unsure of how to write a good heuristic function. However, it’s more complex and interesting than Tic Tac Toe and overall a good game for figuring out and getting familiar with implementations of the various algorithms we learned about in class. I also learned how to build a relatively large project under a fairly tight schedule due to other homework. 
 
 5) What amount of time did you feel that you devoted to building your agent as compared to game mechanics or "just getting things to work"?
 
-I spent about 40% of the time getting things to work (input, indices in drawLine and eraseLine, debugging output to a file, etc) and 60% of the time building my agent. I played around and tested a few implementations of various, possible heuristic functions but overall they didn’t work so well so I just used a rough heuristic. 
+Overall, I spent about 40% of the time getting things to work (input, indices in drawLine and eraseLine, debugging output to a file, etc) and 60% of the time building my agent. I first spent time to build the right helper functions to help me read the input and output the program trace logs. This helped greatly when I was doing actual algorithm development.
+I played around and tested a few implementations of various, possible heuristic functions but overall they didn’t work so well so I just used a rough heuristic. 
 
 6) How could the assignment have been improved?
 
+I don’t know how well this would have worked out, but maybe we could have tried creating agents in teams of 2 or 3. 
+
 7) Add any additional comments.
+
+This is a challenging but fun project. I learned a lot about choosing the right data structures, the performance of brute search, and the power of heuristics. This will help greatly on future projects, especially now that I know how to invest my time budget on various components.
